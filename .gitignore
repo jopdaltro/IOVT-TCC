@@ -1,0 +1,33 @@
+data/processed/*.csv
+data/processed/*.txt
+data/raw/CARDt/*.csv
+data/raw/CARDt/*.txt
+data/raw/CICIoV2024/*.csv
+data/raw/CICIoV2024/*.txt
+data/raw/CARDt/
+data/raw/CICIoV2024/
+data/processed/
+data/raw/
+FORD2019.pdf
+HCRK.pdf
+# Modelos e resultados grandes
+results/*.joblib
+results/models/*.joblib
+results/models/*.pkl
+results/models/*.sav
+results/models/*.h5
+results/models/*.pt
+results/metrics/**/*.csv
+results/metrics/**/*.json
+results/metrics/**/*.txt
+results/visualizations/*.html
+results/visualizations/*.png
+*.joblib
+*.pkl
+*.h5
+*.pt
+*.sav
+
+# Python cache files
+__pycache__/
+*.pyc
