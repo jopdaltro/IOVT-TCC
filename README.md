@@ -1,121 +1,89 @@
 # IOVT-TCC
 
-Deteccao de intrusoes em redes CAN para IoVT (Internet of Vehicles) usando Machine Learning.
+Deteccao de intrusoes em redes CAN para IoVT (Internet of Vehicles) com foco em desempenho de IDS real: qualidade de deteccao e eficiencia operacional.
 
-## 1. Contexto do problema
+## 1. Contexto
 
-Em IoVT, veiculos conectados trocam dados constantemente com ECUs, gateways e servicos externos. A rede CAN e critica para funcoes do veiculo, e ataques como DoS e spoofing podem afetar seguranca e operacao.
+Em IoVT, a rede CAN conecta ECUs criticas. Em ambiente real, nao basta alta acuracia: o IDS precisa manter baixa taxa de falso positivo e responder rapido para nao degradar operacao.
 
-Este projeto implementa um IDS (Intrusion Detection System) baseado em Machine Learning para classificar trafego CAN em classes de comportamento normal e ataque.
+## 2. Objetivo
 
-## 2. Objetivo do projeto
+- Treinar e comparar quatro modelos: MLP, XGBoost, SVM e Logistic Regression.
+- Avaliar nao apenas acuracia, mas metricas centrais para IDS.
+- Gerar um ranking final para deploy considerando qualidade + eficiencia.
 
-- Construir um pipeline reproduzivel para treino e avaliacao de modelos.
-- Comparar desempenho entre MLP, XGBoost e SVM.
-- Registrar metricas e artefatos para analise tecnica no TCC.
+## 3. Dados
 
-## 3. Dados utilizados
+Fontes:
 
-### Fontes
+- CARDt
+- CICIoV2024
 
-- CARDt (dados CAN com ataques e trafego legitimo)
-- CICIoV2024 (dataset publico de seguranca veicular)
-
-Documentacao detalhada das fontes e estrutura:
+Documentacao:
 
 - [docs/DATASETS.md](docs/DATASETS.md)
 - [data/processed/metadata.md](data/processed/metadata.md)
-
-### Pipeline de dados (resumo)
-
-1. Alinhamento de colunas entre datasets.
-2. Limpeza (drop de nulos/duplicados quando aplicavel).
-3. Balanceamento para treinamento.
-4. Split estratificado treino/teste.
 
 Arquivo principal de treino:
 
 - [data/processed/all_datasets_aligned_balanced.csv](data/processed/all_datasets_aligned_balanced.csv)
 
-Observacao: os CSVs grandes nao sao versionados no GitHub para respeitar o limite de 100 MB por arquivo.
-
-## 4. Metodologia
-
-Implementacoes em scripts Python com GridSearchCV e validacao estratificada:
+## 4. Modelos e scripts
 
 - [models/scripts/mlp_classifier.py](models/scripts/mlp_classifier.py)
 - [models/scripts/xgboost_classifier.py](models/scripts/xgboost_classifier.py)
 - [models/scripts/svm_classifier.py](models/scripts/svm_classifier.py)
+- [models/scripts/logistic_regression_classifier.py](models/scripts/logistic_regression_classifier.py)
 
-Principais pontos:
+Todos os scripts usam split estratificado e GridSearchCV, salvando resultados em [results/metrics](results/metrics) e modelos em [results/models](results/models).
 
-- MLP e SVM com pipeline de escalonamento (StandardScaler).
-- XGBoost com busca de hiperparametros para arvores boosted.
-- Metricas salvas por modelo em JSON, relatorio de classificacao e matriz de confusao.
+## 5. Metricas de avaliacao IDS
 
-## 5. Comparacao de resultados
+As metricas principais desta versao sao:
 
-### 5.1 Resumo geral (teste)
+- Recall (detectar ataques)
+- Precision (evitar falso positivo)
+- F1-score
+- False Positive Rate (FPR)
 
-Todos os resultados abaixo foram extraidos dos arquivos em [results/metrics](results/metrics).
+Definicoes aplicadas:
 
-| Modelo | Accuracy (CV) | Accuracy (Teste) | Acertos no teste | Erros no teste | Amostras de teste |
-|---|---:|---:|---:|---:|---:|
-| MLP | 0.988755 | 0.988452 | 684222 | 7994 | 692216 |
-| XGBoost | 0.988986 | 0.989028 | 684621 | 7595 | 692216 |
-| SVM | 0.985810 | 0.985659 | 682289 | 9927 | 692216 |
+- FPR multiclasse: One-vs-Rest (por classe) e media macro em `fpr_macro_ovr`.
+- Visao IDS binaria (ataque vs benign): `attack_precision`, `attack_recall`, `attack_f1`, `attack_fpr`, `attack_fnr`.
 
-Leitura rapida:
+## 6. Eficiencia (velocidade)
 
-- Melhor desempenho global: XGBoost (0.989028 no teste).
-- Segundo lugar: MLP, com diferenca muito pequena para XGBoost.
-- SVM teve o menor desempenho entre os tres, mas ainda com accuracy elevada.
+Cada summary passa a incluir:
 
-### 5.2 Diferenca relativa entre os modelos
+- `training_time_seconds`
+- `inference_time_seconds`
+- `inference_time_ms_per_sample`
+- `inference_throughput_samples_per_second`
+- `model_size_mb`
 
-- XGBoost vs MLP: +0.000576 de accuracy (57.6 bps).
-- XGBoost vs SVM: +0.003369 de accuracy (336.9 bps).
-- MLP vs SVM: +0.002793 de accuracy (279.3 bps).
+Esses campos ficam no bloco `efficiency` dos arquivos `*_summary.json`.
 
-### 5.3 Relatorios de classificacao
+## 7. Comparacao e ranking para uso real
 
-Arquivos completos:
+Script agregador:
 
-- [results/metrics/mlp/mlp_classification_report.txt](results/metrics/mlp/mlp_classification_report.txt)
-- [results/metrics/xgboost/xgboost_classification_report.txt](results/metrics/xgboost/xgboost_classification_report.txt)
-- [results/metrics/svm/svm_classification_report.txt](results/metrics/svm/svm_classification_report.txt)
+- [models/scripts/build_model_comparison.py](models/scripts/build_model_comparison.py)
 
-Resumo observado nos tres modelos:
+Saidas:
 
-- Macro avg de precision/recall/F1 em torno de 0.99.
-- Classes codificadas como 0-4 com desempenho alto em geral.
-- Maior variacao aparece na classe 0 (recall inferior as demais), padrao comum tambem em MLP e SVM.
+- [results/metrics/model_comparison_summary.json](results/metrics/model_comparison_summary.json)
+- [results/metrics/model_comparison_report.md](results/metrics/model_comparison_report.md)
 
-### 5.4 Matrizes de confusao
+Criterio de score composto (deploy IDS):
 
-- [results/metrics/mlp/mlp_confusion_matrix.csv](results/metrics/mlp/mlp_confusion_matrix.csv)
-- [results/metrics/xgboost/xgboost_confusion_matrix.csv](results/metrics/xgboost/xgboost_confusion_matrix.csv)
-- [results/metrics/svm/svm_confusion_matrix.csv](results/metrics/svm/svm_confusion_matrix.csv)
+- 35% recall de ataque
+- 30% baixo FPR de ataque
+- 15% F1 macro
+- 10% precision de ataque
+- 6% velocidade relativa de inferencia
+- 4% velocidade relativa de treino
 
-## 6. Artefatos salvos
-
-Modelos treinados:
-
-- [results/models/mlp_best_model.joblib](results/models/mlp_best_model.joblib)
-- [results/xgboost_best_model.joblib](results/xgboost_best_model.joblib)
-- [results/models/svm_best_model.joblib](results/models/svm_best_model.joblib)
-
-Summaries com hiperparametros e metricas:
-
-- [results/metrics/mlp/mlp_summary.json](results/metrics/mlp/mlp_summary.json)
-- [results/metrics/xgboost/xgboost_summary.json](results/metrics/xgboost/xgboost_summary.json)
-- [results/metrics/svm/svm_summary.json](results/metrics/svm/svm_summary.json)
-
-Visualizacao ROC:
-
-- [results/visualizations/roc_curve_interativo.html](results/visualizations/roc_curve_interativo.html)
-
-## 7. Como executar
+## 8. Como executar
 
 ### Requisitos
 
@@ -128,22 +96,37 @@ Visualizacao ROC:
 pip install -r requirements.txt
 ```
 
-### Treino dos modelos
+### Treinar os 4 modelos
 
 ```bash
 python models/scripts/mlp_classifier.py
 python models/scripts/xgboost_classifier.py
 python models/scripts/svm_classifier.py
+python models/scripts/logistic_regression_classifier.py
 ```
 
-## 8. Estrutura do repositorio
+### Gerar comparativo final
 
-- [docs](docs)
-- [models/scripts](models/scripts)
-- [notebooks](notebooks)
-- [results](results)
-- [data](data)
+```bash
+python models/scripts/build_model_comparison.py
+```
 
-## 9. Conclusao
+## 9. Artefatos
 
-Os tres modelos apresentaram desempenho muito alto para deteccao de intrusao em dados CAN processados. No conjunto atual, XGBoost obteve o melhor resultado geral, seguido de perto por MLP. Isso indica que ambos sao candidatos fortes para um IDS em IoVT, com escolha final dependente de requisitos de latencia, custo computacional e interpretabilidade no ambiente de deploy.
+Summaries:
+
+- [results/metrics/mlp/mlp_summary.json](results/metrics/mlp/mlp_summary.json)
+- [results/metrics/xgboost/xgboost_summary.json](results/metrics/xgboost/xgboost_summary.json)
+- [results/metrics/svm/svm_summary.json](results/metrics/svm/svm_summary.json)
+- [results/metrics/logistic_regression/logistic_regression_summary.json](results/metrics/logistic_regression/logistic_regression_summary.json)
+
+Modelos:
+
+- [results/models/mlp_best_model.joblib](results/models/mlp_best_model.joblib)
+- [results/models/xgboost_best_model.joblib](results/models/xgboost_best_model.joblib)
+- [results/models/svm_best_model.joblib](results/models/svm_best_model.joblib)
+- [results/models/logistic_regression_best_model.joblib](results/models/logistic_regression_best_model.joblib)
+
+## 10. Conclusao
+
+O projeto agora esta estruturado para responder a pergunta correta de IDS em IoVT: qual modelo entrega melhor equilibrio entre deteccao de ataques, baixo falso positivo e eficiencia operacional. O ranking final de producao deve ser lido em [results/metrics/model_comparison_report.md](results/metrics/model_comparison_report.md) apos executar os quatro treinamentos.

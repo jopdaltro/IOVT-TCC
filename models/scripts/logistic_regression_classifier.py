@@ -1,13 +1,13 @@
-﻿import os
+import os
 import time
 
 import pandas as pd
 from joblib import dump
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_split
-from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.pipeline import Pipeline
-from sklearn.svm import SVC
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 from evaluation_utils import write_metrics_bundle
 
@@ -31,13 +31,10 @@ def load_data():
 
     X = df.drop(columns=['flag'])
     y = df['flag']
+
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, stratify=y, random_state=42
     )
-    if X_train.shape[0] > 200_000:
-        X_train, _, y_train, _ = train_test_split(
-            X_train, y_train, train_size=200_000, stratify=y_train, random_state=42
-        )
     return X_train, X_test, y_train, y_test, le
 
 
@@ -72,13 +69,13 @@ def main():
 
     pipeline = Pipeline([
         ('scaler', StandardScaler()),
-        ('svc', SVC(random_state=42))
+        ('lr', LogisticRegression(random_state=42, max_iter=1200, multi_class='auto')),
     ])
 
     param_grid = {
-        'svc__kernel': ['rbf', 'linear'],
-        'svc__C': [1, 10],
-        'svc__gamma': ['scale', 'auto']
+        'lr__C': [0.1, 1.0, 10.0],
+        'lr__solver': ['lbfgs', 'newton-cg'],
+        'lr__class_weight': [None, 'balanced'],
     }
 
     cv = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
@@ -88,8 +85,9 @@ def main():
         scoring='accuracy',
         cv=cv,
         n_jobs=-1,
-        verbose=2
+        verbose=2,
     )
+
     fit_start = time.perf_counter()
     grid_search.fit(X_train, y_train)
     training_time_seconds = time.perf_counter() - fit_start
@@ -97,13 +95,15 @@ def main():
     pred_start = time.perf_counter()
     y_pred = grid_search.predict(X_test)
     inference_time_seconds = time.perf_counter() - pred_start
-    print('SVM melhor score CV:', grid_search.best_score_)
+
+    print('Logistic Regression melhor score CV:', grid_search.best_score_)
     print(classification_report(y_test, y_pred))
 
     root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
     results_dir = os.path.join(root, 'results')
+
     save_results(
-        'svm',
+        'logistic_regression',
         y_test,
         y_pred,
         grid_search,
