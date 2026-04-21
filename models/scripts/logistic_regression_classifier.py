@@ -69,7 +69,7 @@ def main():
 
     pipeline = Pipeline([
         ('scaler', StandardScaler()),
-        ('lr', LogisticRegression(random_state=42, max_iter=1200, multi_class='auto')),
+        ('lr', LogisticRegression(random_state=42, max_iter=1200)),
     ])
 
     param_grid = {
