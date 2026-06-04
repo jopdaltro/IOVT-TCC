@@ -1,0 +1,95 @@
+{
+  "notes": [
+    "Comparacao sem score composto para manter interpretacao direta por metrica.",
+    "Avaliacao sem AUC/ROC; foco em recall, precision, F1, FPR e eficiencia.",
+    "FPR definido em visao binaria de ataque (ataque vs benign)."
+  ],
+  "comparison": [
+    {
+      "model": "logistic_regression",
+      "test_accuracy": 0.38116666666666665,
+      "f1_macro": 0.4677619762518737,
+      "precision_macro": 0.5452969533935372,
+      "recall_macro": 0.44762501009737865,
+      "attack_recall": 0.992754903693232,
+      "attack_precision": 0.998223169864961,
+      "attack_f1": 0.9954815274209268,
+      "attack_fpr": 0.02932551319648094,
+      "attack_fnr": 0.00724509630676798,
+      "training_time_seconds": 0.34706739999819547,
+      "inference_time_ms_per_sample": 0.00026375000015832484,
+      "inference_throughput_samples_per_second": 3791469.1920368387,
+      "model_size_mb": 0.0023889541625976562
+    },
+    {
+      "model": "mlp",
+      "test_accuracy": 0.6337567413472414,
+      "f1_macro": 0.6714684907102942,
+      "precision_macro": 0.6925468834231374,
+      "recall_macro": 0.6734666666666667,
+      "attack_recall": 1.0,
+      "attack_precision": 1.0,
+      "attack_f1": 1.0,
+      "attack_fpr": 0.0,
+      "attack_fnr": 0.0,
+      "training_time_seconds": 279.43113909999374,
+      "inference_time_ms_per_sample": 0.002129728289501412,
+      "inference_throughput_samples_per_second": 469543.4647365786,
+      "model_size_mb": 1.0911645889282227
+    },
+    {
+      "model": "svm",
+      "test_accuracy": 0.408,
+      "f1_macro": 0.5587539739424768,
+      "precision_macro": 0.5729940909951873,
+      "recall_macro": 0.5520778186174674,
+      "attack_recall": 0.9959356776815692,
+      "attack_precision": 1.0,
+      "attack_f1": 0.9979637007525454,
+      "attack_fpr": 0.0,
+      "attack_fnr": 0.004064322318430819,
+      "training_time_seconds": 20.782387700048275,
+      "inference_time_ms_per_sample": 0.3183599833282642,
+      "inference_throughput_samples_per_second": 3141.0982923971633,
+      "model_size_mb": 3.4397478103637695
+    },
+    {
+      "model": "xgboost",
+      "test_accuracy": 0.8769858203388395,
+      "f1_macro": 0.8971391168490203,
+      "precision_macro": 0.906774526819058,
+      "recall_macro": 0.8951000000000001,
+      "attack_recall": 1.0,
+      "attack_precision": 1.0,
+      "attack_f1": 1.0,
+      "attack_fpr": 0.0,
+      "attack_fnr": 0.0,
+      "training_time_seconds": 129.67838729999494,
+      "inference_time_ms_per_sample": 0.005528818947577208,
+      "inference_throughput_samples_per_second": 180870.4552422017,
+      "model_size_mb": 10.661370277404785
+    }
+  ],
+  "highlights": {
+    "best_attack_recall": {
+      "model": "mlp",
+      "value": 1.0
+    },
+    "lowest_attack_fpr": {
+      "model": "mlp",
+      "value": 0.0
+    },
+    "best_f1_macro": {
+      "model": "xgboost",
+      "value": 0.8971391168490203
+    },
+    "lowest_inference_time_ms": {
+      "model": "logistic_regression",
+      "value": 0.00026375000015832484
+    },
+    "lowest_training_time_s": {
+      "model": "logistic_regression",
+      "value": 0.34706739999819547
+    }
+  }
+}

@@ -33,6 +33,10 @@ def load_data():
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, stratify=y, random_state=42
     )
+    if X_train.shape[0] > 300_000:
+        X_train, _, y_train, _ = train_test_split(
+            X_train, y_train, train_size=300_000, stratify=y_train, random_state=42
+        )
     return X_train, X_test, y_train, y_test, le
 
 
@@ -73,10 +77,10 @@ def main():
 
     param_grid = {
         'n_estimators': [100, 200],
-        'max_depth': [3, 5, 7],
-        'learning_rate': [0.05, 0.1],
-        'subsample': [0.8, 1.0],
-        'colsample_bytree': [0.8, 1.0]
+        'max_depth': [5],
+        'learning_rate': [0.1],
+        'subsample': [1.0],
+        'colsample_bytree': [1.0]
     }
 
     cv = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
@@ -85,7 +89,7 @@ def main():
         param_grid=param_grid,
         scoring='accuracy',
         cv=cv,
-        n_jobs=-1,
+        n_jobs=1,
         verbose=2
     )
     fit_start = time.perf_counter()

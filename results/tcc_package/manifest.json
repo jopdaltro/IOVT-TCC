@@ -1,0 +1,11 @@
+{
+  "generated_at": "2026-05-22T23:15:11.530592",
+  "package_root": "c:\\Users\\thelo\\Documents\\TCC\\IOVT-TCC\\results\\tcc_package",
+  "copied_metrics_files": 20,
+  "copied_legacy_figures": 0,
+  "notes": [
+    "Comparacao de modelos sem score composto.",
+    "Analise de overfitting por learning curves com F1 macro.",
+    "AUC/ROC nao usados nos novos relatorios do pacote TCC."
+  ]
+}

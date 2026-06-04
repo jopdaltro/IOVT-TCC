@@ -34,6 +34,10 @@ def load_data():
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, stratify=y, random_state=42
     )
+    if X_train.shape[0] > 300_000:
+        X_train, _, y_train, _ = train_test_split(
+            X_train, y_train, train_size=300_000, stratify=y_train, random_state=42
+        )
     return X_train, X_test, y_train, y_test, le
 
 
@@ -73,8 +77,8 @@ def main():
 
     param_grid = {
         'mlp__hidden_layer_sizes': [(100,), (100, 50)],
-        'mlp__alpha': [0.0001, 0.001],
-        'mlp__learning_rate': ['constant', 'adaptive']
+        'mlp__alpha': [0.0001],
+        'mlp__learning_rate': ['adaptive']
     }
 
     cv = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
@@ -83,7 +87,7 @@ def main():
         param_grid=param_grid,
         scoring='accuracy',
         cv=cv,
-        n_jobs=-1,
+        n_jobs=1,
         verbose=2
     )
     fit_start = time.perf_counter()

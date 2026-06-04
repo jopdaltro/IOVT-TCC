@@ -31,7 +31,7 @@ Implementacao compartilhada de metricas:
 
 - models/scripts/evaluation_utils.py
 
-## Comparacao e ranking
+## Comparacao direta por metrica
 
 Agregador:
 
@@ -39,17 +39,36 @@ Agregador:
 
 Saidas:
 
-- results/metrics/model_comparison_summary.json
-- results/metrics/model_comparison_report.md
+- results/tcc_package/tables/model_comparison_no_score.json
+- results/tcc_package/reports/model_comparison_report.md
 
-Score composto para decisao real:
+Metricas usadas para comparacao:
 
-- 35% attack_recall
-- 30% (1 - attack_fpr)
-- 15% f1_macro
-- 10% attack_precision
-- 6% eficiencia de inferencia
-- 4% eficiencia de treino
+- attack_recall
+- attack_precision
+- attack_fpr
+- f1_macro
+- training_time_seconds
+- inference_time_ms_per_sample
+
+## Analise de overfitting
+
+Script:
+
+- models/scripts/build_learning_curves.py
+
+Saidas:
+
+- results/tcc_package/figures/learning_curves/*.png
+- results/tcc_package/tables/*_learning_curve_f1_macro.csv
+- results/tcc_package/reports/learning_curve_analysis.md
+
+Abordagem teorica aplicada:
+
+- Curva de aprendizado com treino e validacao em funcao do tamanho de treino.
+- Overfitting: treino alto, validacao menor e gap persistente.
+- Underfitting: treino e validacao baixos e proximos.
+- Ajuste equilibrado: curvas proximas em nivel alto e tendencia de estabilizacao.
 
 ## Observacao de reproducibilidade
 

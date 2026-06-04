@@ -35,6 +35,10 @@ def load_data():
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, stratify=y, random_state=42
     )
+    if X_train.shape[0] > 300_000:
+        X_train, _, y_train, _ = train_test_split(
+            X_train, y_train, train_size=300_000, stratify=y_train, random_state=42
+        )
     return X_train, X_test, y_train, y_test, le
 
 
@@ -73,8 +77,8 @@ def main():
     ])
 
     param_grid = {
-        'lr__C': [0.1, 1.0, 10.0],
-        'lr__solver': ['lbfgs', 'newton-cg'],
+        'lr__C': [0.1, 1.0],
+        'lr__solver': ['lbfgs'],
         'lr__class_weight': [None, 'balanced'],
     }
 
@@ -84,7 +88,7 @@ def main():
         param_grid=param_grid,
         scoring='accuracy',
         cv=cv,
-        n_jobs=-1,
+        n_jobs=1,
         verbose=2,
     )
 

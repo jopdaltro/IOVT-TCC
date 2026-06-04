@@ -34,9 +34,9 @@ def load_data():
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, stratify=y, random_state=42
     )
-    if X_train.shape[0] > 200_000:
+    if X_train.shape[0] > 120_000:
         X_train, _, y_train, _ = train_test_split(
-            X_train, y_train, train_size=200_000, stratify=y_train, random_state=42
+            X_train, y_train, train_size=120_000, stratify=y_train, random_state=42
         )
     return X_train, X_test, y_train, y_test, le
 
@@ -76,9 +76,9 @@ def main():
     ])
 
     param_grid = {
-        'svc__kernel': ['rbf', 'linear'],
-        'svc__C': [1, 10],
-        'svc__gamma': ['scale', 'auto']
+        'svc__kernel': ['rbf'],
+        'svc__C': [10],
+        'svc__gamma': ['scale']
     }
 
     cv = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
@@ -87,7 +87,7 @@ def main():
         param_grid=param_grid,
         scoring='accuracy',
         cv=cv,
-        n_jobs=-1,
+        n_jobs=1,
         verbose=2
     )
     fit_start = time.perf_counter()

@@ -10,7 +10,8 @@ Em IoVT, a rede CAN conecta ECUs criticas. Em ambiente real, nao basta alta acur
 
 - Treinar e comparar quatro modelos: MLP, XGBoost, SVM e Logistic Regression.
 - Avaliar nao apenas acuracia, mas metricas centrais para IDS.
-- Gerar um ranking final para deploy considerando qualidade + eficiencia.
+- Comparar resultados de forma direta por metrica, sem score composto.
+- Analisar overfitting/underfitting com learning curves.
 
 ## 3. Dados
 
@@ -63,25 +64,29 @@ Cada summary passa a incluir:
 
 Esses campos ficam no bloco `efficiency` dos arquivos `*_summary.json`.
 
-## 7. Comparacao e ranking para uso real
+## 7. Comparacao sem score composto
 
 Script agregador:
 
 - [models/scripts/build_model_comparison.py](models/scripts/build_model_comparison.py)
+- [models/scripts/build_learning_curves.py](models/scripts/build_learning_curves.py)
+- [models/scripts/build_tcc_package.py](models/scripts/build_tcc_package.py)
 
 Saidas:
 
-- [results/metrics/model_comparison_summary.json](results/metrics/model_comparison_summary.json)
-- [results/metrics/model_comparison_report.md](results/metrics/model_comparison_report.md)
+- [results/tcc_package/tables/model_comparison_no_score.json](results/tcc_package/tables/model_comparison_no_score.json)
+- [results/tcc_package/reports/model_comparison_report.md](results/tcc_package/reports/model_comparison_report.md)
+- [results/tcc_package/reports/learning_curve_analysis.md](results/tcc_package/reports/learning_curve_analysis.md)
+- [results/tcc_package/figures/learning_curves](results/tcc_package/figures/learning_curves)
 
-Criterio de score composto (deploy IDS):
+Comparacao principal por metrica:
 
-- 35% recall de ataque
-- 30% baixo FPR de ataque
-- 15% F1 macro
-- 10% precision de ataque
-- 6% velocidade relativa de inferencia
-- 4% velocidade relativa de treino
+- attack_recall
+- attack_precision
+- attack_fpr
+- f1_macro
+- training_time_seconds
+- inference_time_ms_per_sample
 
 ## 8. Como executar
 
@@ -105,10 +110,10 @@ python models/scripts/svm_classifier.py
 python models/scripts/logistic_regression_classifier.py
 ```
 
-### Gerar comparativo final
+### Gerar pacote final do TCC
 
 ```bash
-python models/scripts/build_model_comparison.py
+python models/scripts/build_tcc_package.py
 ```
 
 ## 9. Artefatos
@@ -129,4 +134,4 @@ Modelos:
 
 ## 10. Conclusao
 
-O projeto agora esta estruturado para responder a pergunta correta de IDS em IoVT: qual modelo entrega melhor equilibrio entre deteccao de ataques, baixo falso positivo e eficiencia operacional. O ranking final de producao deve ser lido em [results/metrics/model_comparison_report.md](results/metrics/model_comparison_report.md) apos executar os quatro treinamentos.
+O projeto agora esta estruturado para responder a pergunta correta de IDS em IoVT: qual modelo entrega melhor equilibrio entre deteccao de ataques, baixo falso positivo e eficiencia operacional sem depender de score agregado. O comparativo final deve ser lido em [results/tcc_package/reports/model_comparison_report.md](results/tcc_package/reports/model_comparison_report.md), junto da analise de overfitting em [results/tcc_package/reports/learning_curve_analysis.md](results/tcc_package/reports/learning_curve_analysis.md).

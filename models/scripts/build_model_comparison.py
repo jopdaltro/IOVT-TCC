@@ -9,20 +9,6 @@ import pandas as pd
 
 MODELS = ['mlp', 'xgboost', 'svm', 'logistic_regression']
 
-DEFAULT_TRAIN_SPEED_PRIOR = {
-    'logistic_regression': 1.0,
-    'mlp': 0.7,
-    'xgboost': 0.5,
-    'svm': 0.3,
-}
-
-DEFAULT_INFER_SPEED_PRIOR = {
-    'logistic_regression': 1.0,
-    'xgboost': 0.8,
-    'mlp': 0.6,
-    'svm': 0.2,
-}
-
 
 def load_summary(root: str, model: str) -> Dict:
     path = os.path.join(root, 'results', 'metrics', model, f'{model}_summary.json')
@@ -155,84 +141,78 @@ def enrich_summary(root: str, model: str, summary: Dict) -> Dict:
     return summary
 
 
-def rank_labels(values: Dict[str, float], reverse: bool = False) -> Dict[str, str]:
-    available = {k: v for k, v in values.items() if v is not None}
+def best_model(rows: List[Dict], key: str, higher_is_better: bool = True) -> Dict[str, float]:
+    available = [(row['model'], row.get(key)) for row in rows if row.get(key) is not None]
     if not available:
         return {}
-
-    sorted_items = sorted(available.items(), key=lambda kv: kv[1], reverse=reverse)
-    labels_pool = ['very_fast', 'fast', 'medium', 'slow'] if not reverse else ['best', 'strong', 'moderate', 'weak']
-
-    labels: Dict[str, str] = {}
-    for idx, (name, _) in enumerate(sorted_items):
-        labels[name] = labels_pool[min(idx, len(labels_pool) - 1)]
-    return labels
+    best = max(available, key=lambda x: x[1]) if higher_is_better else min(available, key=lambda x: x[1])
+    return {'model': best[0], 'value': float(best[1])}
 
 
-def normalize_scores(values: Dict[str, float], higher_is_better: bool) -> Dict[str, float]:
-    filtered = {k: v for k, v in values.items() if v is not None}
-    if not filtered:
-        return {}
-
-    vmin = min(filtered.values())
-    vmax = max(filtered.values())
-    if vmax == vmin:
-        return {k: 1.0 for k in filtered}
-
-    out: Dict[str, float] = {}
-    for key, value in filtered.items():
-        base = (value - vmin) / (vmax - vmin)
-        out[key] = base if higher_is_better else (1.0 - base)
-    return out
-
-
-def composite_score(row: Dict, train_eff: Dict[str, float], infer_eff: Dict[str, float]) -> float:
-    model = row['model']
-    attack = row.get('attack_detection', {})
-
-    recall_attack = attack.get('attack_recall', row.get('recall_macro', 0.0)) or 0.0
-    precision_attack = attack.get('attack_precision', row.get('precision_macro', 0.0)) or 0.0
-    attack_fpr = attack.get('attack_fpr', row.get('fpr_macro_ovr', 1.0))
-    attack_fpr = 1.0 if attack_fpr is None else attack_fpr
-    f1_macro = row.get('f1_macro', 0.0) or 0.0
-
-    score = (
-        0.35 * recall_attack
-        + 0.30 * (1.0 - attack_fpr)
-        + 0.15 * f1_macro
-        + 0.10 * precision_attack
-        + 0.06 * infer_eff.get(model, 0.0)
-        + 0.04 * train_eff.get(model, 0.0)
-    )
-    return float(score)
+def flatten_row(summary: Dict) -> Dict:
+    attack = summary.get('attack_detection', {}) or {}
+    efficiency = summary.get('efficiency', {}) or {}
+    return {
+        'model': summary['model'],
+        'test_accuracy': summary.get('test_accuracy'),
+        'f1_macro': summary.get('f1_macro'),
+        'precision_macro': summary.get('precision_macro'),
+        'recall_macro': summary.get('recall_macro'),
+        'attack_recall': attack.get('attack_recall'),
+        'attack_precision': attack.get('attack_precision'),
+        'attack_f1': attack.get('attack_f1'),
+        'attack_fpr': attack.get('attack_fpr'),
+        'attack_fnr': attack.get('attack_fnr'),
+        'training_time_seconds': efficiency.get('training_time_seconds'),
+        'inference_time_ms_per_sample': efficiency.get('inference_time_ms_per_sample'),
+        'inference_throughput_samples_per_second': efficiency.get('inference_throughput_samples_per_second'),
+        'model_size_mb': efficiency.get('model_size_mb'),
+    }
 
 
-def write_markdown_report(root: str, rows: List[Dict]):
-    out_path = os.path.join(root, 'results', 'metrics', 'model_comparison_report.md')
+def write_markdown_report(root: str, rows: List[Dict], highlights: Dict[str, Dict[str, float]]):
+    out_dir = os.path.join(root, 'results', 'tcc_package', 'reports')
+    os.makedirs(out_dir, exist_ok=True)
+    out_path = os.path.join(out_dir, 'model_comparison_report.md')
+
+    def _fmt(value):
+        if value is None:
+            return 'n/a'
+        return f'{float(value):.6f}'
+
     lines = [
-        '# Comparativo de Modelos (IDS)',
+        '# Comparativo de Modelos IDS (Sem Score Composto)',
         '',
-        'Criterio de ranking: Recall de ataque e FPR de ataque com maior peso, depois F1, Precision e eficiencia relativa.',
+        'Este relatorio apresenta comparacao direta por metrica, sem score composto e sem AUC/ROC.',
         '',
-        '| Rank | Modelo | Recall ataque | Precision ataque | FPR ataque | F1 macro | Velocidade treino | Velocidade inferencia | Score |',
-        '|---|---|---:|---:|---:|---:|---|---|---:|',
+        '| Modelo | Accuracy teste | Recall ataque | Precision ataque | FPR ataque | F1 macro | Tempo treino (s) | Inferencia (ms/amostra) |',
+        '|---|---:|---:|---:|---:|---:|---:|---:|',
     ]
 
     for row in rows:
-        attack = row.get('attack_detection', {})
         lines.append(
-            '| {rank} | {model} | {recall:.6f} | {precision:.6f} | {fpr:.6f} | {f1:.6f} | {train_label} | {infer_label} | {score:.6f} |'.format(
-                rank=row['rank'],
+            '| {model} | {accuracy} | {recall} | {precision} | {fpr} | {f1} | {train_time} | {infer_ms} |'.format(
                 model=row['model'],
-                recall=(attack.get('attack_recall') or 0.0),
-                precision=(attack.get('attack_precision') or 0.0),
-                fpr=(attack.get('attack_fpr') or 0.0),
-                f1=(row.get('f1_macro') or 0.0),
-                train_label=row.get('relative_training_speed', 'n/a'),
-                infer_label=row.get('relative_inference_speed', 'n/a'),
-                score=row.get('ids_composite_score', 0.0),
+                accuracy=_fmt(row.get('test_accuracy')),
+                recall=_fmt(row.get('attack_recall')),
+                precision=_fmt(row.get('attack_precision')),
+                fpr=_fmt(row.get('attack_fpr')),
+                f1=_fmt(row.get('f1_macro')),
+                train_time=_fmt(row.get('training_time_seconds')),
+                infer_ms=_fmt(row.get('inference_time_ms_per_sample')),
             )
         )
+
+    lines.extend([
+        '',
+        '## Destaques por metrica',
+        '',
+        f"- Maior recall de ataque: {highlights.get('best_attack_recall', {}).get('model', 'n/a')} ({_fmt(highlights.get('best_attack_recall', {}).get('value'))})",
+        f"- Menor FPR de ataque: {highlights.get('lowest_attack_fpr', {}).get('model', 'n/a')} ({_fmt(highlights.get('lowest_attack_fpr', {}).get('value'))})",
+        f"- Maior F1 macro: {highlights.get('best_f1_macro', {}).get('model', 'n/a')} ({_fmt(highlights.get('best_f1_macro', {}).get('value'))})",
+        f"- Menor tempo de inferencia: {highlights.get('lowest_inference_time_ms', {}).get('model', 'n/a')} ({_fmt(highlights.get('lowest_inference_time_ms', {}).get('value'))} ms/amostra)",
+        f"- Menor tempo de treino: {highlights.get('lowest_training_time_s', {}).get('model', 'n/a')} ({_fmt(highlights.get('lowest_training_time_s', {}).get('value'))} s)",
+    ])
 
     with open(out_path, 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines))
@@ -251,61 +231,46 @@ if __name__ == '__main__':
         rows.append(summary)
 
     if not rows:
-        raise SystemExit('Nenhum summary encontrado em results/metrics/*/*_summary.json')
+        out_reports = os.path.join(root, 'results', 'tcc_package', 'reports')
+        os.makedirs(out_reports, exist_ok=True)
+        placeholder = os.path.join(out_reports, 'model_comparison_report.md')
+        with open(placeholder, 'w', encoding='utf-8') as f:
+            f.write(
+                '# Comparativo de Modelos IDS (Sem Score Composto)\n\n'
+                'Nenhum summary foi encontrado em results/metrics/*/*_summary.json.\n\n'
+                'Execute primeiro os scripts de treino dos quatro modelos e rode novamente este script.\n'
+            )
+        print('Nenhum summary encontrado. Relatorio placeholder gerado em results/tcc_package/reports/model_comparison_report.md')
+        raise SystemExit(0)
 
-    training_times = {}
-    inference_times = {}
-    for row in rows:
-        model = row['model']
-        train_v = row.get('efficiency', {}).get('training_time_seconds')
-        infer_v = row.get('efficiency', {}).get('inference_time_ms_per_sample')
+    rows = [flatten_row(row) for row in rows]
+    rows.sort(key=lambda r: r['model'])
 
-        if train_v is None:
-            train_v = 1.0 / DEFAULT_TRAIN_SPEED_PRIOR.get(model, 0.5)
-        if infer_v is None:
-            infer_v = 1.0 / DEFAULT_INFER_SPEED_PRIOR.get(model, 0.5)
-
-        training_times[model] = float(train_v)
-        inference_times[model] = float(infer_v)
-
-    train_labels = rank_labels(training_times, reverse=False)
-    infer_labels = rank_labels(inference_times, reverse=False)
-
-    train_eff = normalize_scores(training_times, higher_is_better=False)
-    infer_eff = normalize_scores(inference_times, higher_is_better=False)
-
-    for row in rows:
-        model = row['model']
-        row['relative_training_speed'] = train_labels.get(model, 'n/a')
-        row['relative_inference_speed'] = infer_labels.get(model, 'n/a')
-        row['ids_composite_score'] = composite_score(row, train_eff, infer_eff)
-
-    rows.sort(key=lambda r: r['ids_composite_score'], reverse=True)
-    for idx, row in enumerate(rows, start=1):
-        row['rank'] = idx
-
-    output = {
-        'criteria': {
-            'attack_recall_weight': 0.35,
-            'attack_fpr_weight': 0.30,
-            'f1_macro_weight': 0.15,
-            'attack_precision_weight': 0.10,
-            'inference_efficiency_weight': 0.06,
-            'training_efficiency_weight': 0.04,
-        },
-        'notes': [
-            'FPR definido em visao binaria de ataque (ataque vs benign).',
-            'Velocidade classificada de forma relativa entre os modelos disponiveis.',
-            'Quando tempos medidos nao existem no summary, usa prior relativa por tipo de algoritmo.',
-        ],
-        'ranking': rows,
+    highlights = {
+        'best_attack_recall': best_model(rows, 'attack_recall', higher_is_better=True),
+        'lowest_attack_fpr': best_model(rows, 'attack_fpr', higher_is_better=False),
+        'best_f1_macro': best_model(rows, 'f1_macro', higher_is_better=True),
+        'lowest_inference_time_ms': best_model(rows, 'inference_time_ms_per_sample', higher_is_better=False),
+        'lowest_training_time_s': best_model(rows, 'training_time_seconds', higher_is_better=False),
     }
 
-    out_json = os.path.join(root, 'results', 'metrics', 'model_comparison_summary.json')
+    output = {
+        'notes': [
+            'Comparacao sem score composto para manter interpretacao direta por metrica.',
+            'Avaliacao sem AUC/ROC; foco em recall, precision, F1, FPR e eficiencia.',
+            'FPR definido em visao binaria de ataque (ataque vs benign).',
+        ],
+        'comparison': rows,
+        'highlights': highlights,
+    }
+
+    out_dir = os.path.join(root, 'results', 'tcc_package', 'tables')
+    os.makedirs(out_dir, exist_ok=True)
+    out_json = os.path.join(out_dir, 'model_comparison_no_score.json')
     with open(out_json, 'w', encoding='utf-8') as f:
         json.dump(output, f, indent=2)
 
-    write_markdown_report(root, rows)
+    write_markdown_report(root, rows, highlights)
 
     print(f'Comparativo salvo em: {out_json}')
-    print('Relatorio markdown salvo em: results/metrics/model_comparison_report.md')
+    print('Relatorio markdown salvo em: results/tcc_package/reports/model_comparison_report.md')

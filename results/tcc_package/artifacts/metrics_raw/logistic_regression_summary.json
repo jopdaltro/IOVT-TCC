@@ -1,0 +1,45 @@
+{
+  "best_params": {
+    "mode": "fast_train_fixed_params"
+  },
+  "best_cv_accuracy": NaN,
+  "test_accuracy": 0.38116666666666665,
+  "n_test_samples": 6000,
+  "classes": [
+    "BENIGN",
+    "DoS",
+    "Fuzzy",
+    "GEAR",
+    "RPM",
+    "SPEED"
+  ],
+  "precision_macro": 0.5452969533935372,
+  "recall_macro": 0.44762501009737865,
+  "f1_macro": 0.4677619762518737,
+  "precision_weighted": 0.3799794044542628,
+  "recall_weighted": 0.38116666666666665,
+  "f1_weighted": 0.3793007927926557,
+  "fpr_macro_ovr": 0.1346347991021686,
+  "fpr_per_class_ovr": {
+    "BENIGN": 0.00724509630676798,
+    "DoS": 0.21312169312169313,
+    "Fuzzy": 0.17947626144347456,
+    "GEAR": 0.20688124306326305,
+    "RPM": 0.20108450067781292,
+    "SPEED": 0.0
+  },
+  "attack_detection": {
+    "attack_precision": 0.998223169864961,
+    "attack_recall": 0.992754903693232,
+    "attack_f1": 0.9954815274209268,
+    "attack_fpr": 0.02932551319648094,
+    "attack_fnr": 0.00724509630676798
+  },
+  "efficiency": {
+    "training_time_seconds": 0.34706739999819547,
+    "inference_time_seconds": 0.001582500000949949,
+    "inference_time_ms_per_sample": 0.00026375000015832484,
+    "inference_throughput_samples_per_second": 3791469.1920368387,
+    "model_size_mb": 0.0023889541625976562
+  }
+}

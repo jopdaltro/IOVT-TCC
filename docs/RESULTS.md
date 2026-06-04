@@ -2,13 +2,13 @@
 
 ## Objetivo desta versao
 
-A comparacao agora foca em criterio de IDS real:
+A comparacao agora foca em criterio de IDS real sem score composto:
 
 - Recall de ataque
 - Precision de ataque
 - F1 macro
 - False Positive Rate (FPR)
-- Eficiencia relativa de treino e inferencia
+- Eficiencia de treino e inferencia
 
 ## Modelos avaliados
 
@@ -23,16 +23,17 @@ A comparacao agora foca em criterio de IDS real:
 - results/metrics/xgboost/xgboost_summary.json
 - results/metrics/svm/svm_summary.json
 - results/metrics/logistic_regression/logistic_regression_summary.json
-- results/metrics/model_comparison_summary.json
-- results/metrics/model_comparison_report.md
+- results/tcc_package/tables/model_comparison_no_score.json
+- results/tcc_package/reports/model_comparison_report.md
+- results/tcc_package/reports/learning_curve_analysis.md
 
-## Ranking atual (com dados disponiveis)
+## Comparacao atual (com dados disponiveis)
 
-Apos executar o agregador, o ranking atual esta em:
+Apos executar o pacote de resultados, a comparacao atual esta em:
 
-- results/metrics/model_comparison_report.md
+- results/tcc_package/reports/model_comparison_report.md
 
-Observacao: no estado atual, o ranking foi gerado com os summaries existentes. Para comparacao completa dos 4 modelos com eficiencia medida, execute tambem o treino da Logistic Regression.
+Observacao: para comparacao completa dos 4 modelos com eficiencia medida, execute os quatro scripts de treino antes do pacote final.
 
 ## Definicoes de metrica
 
@@ -59,10 +60,18 @@ Cada summary novo inclui bloco efficiency com:
 - inference_throughput_samples_per_second
 - model_size_mb
 
-Quando um summary antigo nao possui tempos medidos, o agregador usa prior relativa por tipo de algoritmo apenas para classificacao qualitativa de velocidade.
+Quando um summary nao possui tempos medidos, a metrica fica como n/a em vez de usar estimativa por prior.
 
 ## Recomendacao operacional
 
 - Para decisao de deploy, priorize ataque_recall alto e attack_fpr baixo.
 - Use acuracia como metrica secundaria.
 - Valide latencia no hardware alvo antes de producao.
+
+## Analise de overfitting (sem AUC/ROC)
+
+- Learning curves sao geradas com F1 macro em treino e validacao.
+- O comportamento de overfitting/underfitting e descrito em linguagem direta no relatorio.
+- Arquivos:
+	- results/tcc_package/figures/learning_curves
+	- results/tcc_package/reports/learning_curve_analysis.md
