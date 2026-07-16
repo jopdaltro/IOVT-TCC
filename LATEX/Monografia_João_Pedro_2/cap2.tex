@@ -1,0 +1,80 @@
+\chapter{Fundamentacao Teorica}
+
+Este capitulo apresenta os conceitos que sustentam o trabalho: rede CAN em sistemas veiculares, tipos de ataque considerados no recorte experimental, fundamentos de IDS baseado em aprendizado supervisionado e metricas usadas na comparacao final.
+
+\section{Rede CAN no Contexto Veicular}
+
+A Controller Area Network (CAN) e um barramento de comunicacao serial amplamente usado em veiculos para troca de mensagens entre ECUs. Em vez de um modelo cliente-servidor tradicional, a comunicacao ocorre por difusao no barramento, e cada mensagem e identificada por um \texttt{CAN ID}. Esse desenho favorece robustez e baixo custo, mas tambem cria desafios de seguranca, pois um no comprometido pode injetar mensagens que afetam varios subsistemas.
+
+No recorte deste trabalho, cada amostra e representada por atributos derivados da mensagem CAN, incluindo \texttt{DLC} e bytes de payload. O dataset final contempla cinco classes: \texttt{BENIGN}, \texttt{DoS}, \texttt{Fuzzy}, \texttt{GEAR} e \texttt{RPM}.
+
+\section{Ataques Considerados}
+
+\subsection{DoS}
+
+No ataque DoS em CAN, o barramento e sobrecarregado com mensagens de alta frequencia, reduzindo a disponibilidade para trafego legitimo. Em ambiente veicular, isso pode degradar a latencia de sinais criticos e comprometer funcoes de controle.
+
+\subsection{Fuzzy}
+
+Fuzzy refere-se a injecoes com padroes aleatorios ou semantica inconsistente no payload. Esse tipo de ataque tende a ser mais desafiador para classificacao porque pode apresentar fronteira menos nitida entre comportamento legitimo e malicioso.
+
+\subsection{Spoofing de Sinais (GEAR e RPM)}
+
+Nos ataques de spoofing, mensagens validas do ponto de vista de formato sao injetadas com conteudo falso para simular estados incorretos do sistema. Neste trabalho, o problema inclui spoofing associado a \texttt{GEAR} e \texttt{RPM}.
+
+\section{IDS Baseado em Aprendizado Supervisionado}
+
+Um IDS supervisionado aprende uma funcao de mapeamento entre atributos de entrada e classes de saida a partir de dados rotulados. No contexto deste trabalho, essa formulacao e multiclasse e foi aplicada a quatro modelos:
+
+\begin{itemize}
+    \item Regressao Logistica;
+    \item SVM (LinearSVC);
+    \item MLP;
+    \item XGBoost.
+\end{itemize}
+
+A comparacao entre modelos foi realizada no mesmo recorte de classes, com artefatos finais padronizados em \texttt{classification\_report} e \texttt{run\_summary}.
+
+\section{Metricas de Avaliacao}
+
+As metricas utilizadas no comparativo principal sao \texttt{accuracy}, \texttt{precision macro}, \texttt{recall macro} e \texttt{F1 macro}, alem da analise por classe.
+
+\subsection{Acuracia}
+
+\begin{equation}
+\text{Acuracia} = \frac{\text{VP} + \text{VN}}{\text{VP} + \text{VN} + \text{FP} + \text{FN}}
+\end{equation}
+
+Expressa a proporcao total de previsoes corretas, mas isoladamente pode mascarar dificuldades em classes especificas.
+
+\subsection{Precisao}
+
+\begin{equation}
+\text{Precisao} = \frac{\text{VP}}{\text{VP} + \text{FP}}
+\end{equation}
+
+Indica a confiabilidade das predicoes positivas do modelo.
+
+\subsection{Recall}
+
+\begin{equation}
+\text{Recall} = \frac{\text{VP}}{\text{VP} + \text{FN}}
+\end{equation}
+
+Mede a capacidade de recuperar instancias positivas reais.
+
+\subsection{F1-Score}
+
+\begin{equation}
+\text{F1} = \frac{2 \cdot \text{Precisao} \cdot \text{Recall}}{\text{Precisao} + \text{Recall}}
+\end{equation}
+
+Combina precisao e recall em uma unica medida harmonica.
+
+\subsection{Media Macro}
+
+No cenario multiclasse, a media macro calcula a media aritmetica simples da metrica em todas as classes. Esse criterio foi adotado para evitar que classes com maior volume dominem a interpretacao global.
+
+\section{Sintese do Capitulo}
+
+A fundamentacao apresentada sustenta a estrategia metodologica e o criterio de comparacao usados no trabalho. Em especial, destaca-se que IDS em CAN deve ser analisado tanto por desempenho global quanto por classe, pois ataques como Fuzzy podem exigir maior capacidade de discriminacao dos modelos.

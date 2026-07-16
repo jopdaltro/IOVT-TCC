@@ -1,0 +1,47 @@
+\chapter{Considerações Finais}
+
+Este trabalho apresentou uma comparacao entre quatro modelos supervisionados para deteccao de intrusoes em rede CAN no contexto IoVT: Regressao Logistica, SVM, MLP e XGBoost. O estudo foi conduzido com base no conjunto final alinhado e limpo, com classes \texttt{BENIGN}, \texttt{DoS}, \texttt{Fuzzy}, \texttt{GEAR} e \texttt{RPM}, adotando como fonte canonica os artefatos finais em \texttt{results/metrics/*\_final\_clean}.
+
+\section{Resposta a Pergunta de Pesquisa}
+
+A pergunta de pesquisa buscou identificar qual modelo apresenta melhor desempenho multiclasse para IDS em CAN. Com base nos resultados obtidos, o \textbf{XGBoost} foi o modelo de melhor desempenho global, seguido de perto pelo \textbf{MLP}. Em seguida aparecem \textbf{Regressao Logistica} e \textbf{SVM}.
+
+Em metricas globais, o XGBoost atingiu \texttt{accuracy = 0.99998} e \texttt{F1 macro = 0.99998}, enquanto o MLP obteve \texttt{accuracy = 0.99908} e \texttt{F1 macro = 0.99905}. Esses resultados sustentam a recomendacao principal desta pesquisa para o cenario experimental adotado.
+
+\section{Principais Achados}
+
+Os principais achados do trabalho sao:
+
+\begin{itemize}
+	\item a comparacao com fonte canonica unica reduziu divergencias entre capitulos e aumentou a rastreabilidade dos resultados;
+	\item classes \texttt{GEAR} e \texttt{RPM} apresentaram separacao quase perfeita na maior parte dos modelos;
+	\item a classe \texttt{Fuzzy} foi a mais desafiadora, concentrando os menores valores de recall;
+	\item modelos de maior capacidade representacional (MLP e XGBoost) superaram abordagens lineares no cenario avaliado.
+\end{itemize}
+
+\section{Limitacoes}
+
+Apesar dos resultados elevados, este estudo possui limitacoes importantes:
+
+\begin{itemize}
+	\item diferencas de tamanho entre os conjuntos de treino/teste por modelo;
+	\item avaliacao restrita ao recorte final de cinco classes;
+	\item ausencia de validacao em hardware embarcado e ambiente veicular em tempo real.
+\end{itemize}
+
+Esses pontos devem ser considerados na interpretacao de generalizacao dos resultados.
+
+\section{Trabalhos Futuros}
+
+Como continuidade desta pesquisa, recomendam-se as seguintes direcoes:
+
+\begin{itemize}
+	\item validacao cruzada entre datasets e cenarios de coleta distintos;
+	\item teste com ataques nao vistos para avaliar robustez fora da distribuicao de treino;
+	\item avaliacao de latencia e throughput em plataforma alvo de implantacao;
+	\item estudo de interpretabilidade para explicar decisoes em classes mais ambiguas, especialmente \texttt{Fuzzy}.
+\end{itemize}
+
+Em sintese, o trabalho cumpre seu objetivo ao estabelecer uma comparacao objetiva e reproduzivel entre modelos para IDS em rede CAN, oferecendo base tecnica consistente para evolucoes futuras em seguranca veicular.
+
+

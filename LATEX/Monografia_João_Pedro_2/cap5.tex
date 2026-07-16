@@ -1,0 +1,58 @@
+\chapter{Resultados e Discussões}
+
+Este capitulo apresenta os resultados finais dos quatro modelos avaliados para deteccao de intrusoes em rede CAN: Regressao Logistica, SVM, MLP e XGBoost. A base canonica utilizada corresponde aos artefatos \texttt{run\_summary.json} e \texttt{classification\_report.txt} dos diretorios \texttt{*\_final\_clean}.
+
+\section{Comparacao Principal entre Modelos}
+
+A Tabela \ref{tab:comparacao_principal} consolida as metricas globais de comparacao no conjunto de teste.
+
+\begin{table}[H]
+\centering
+\caption{Comparacao principal entre os modelos (resultados finais limpos)}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Modelo} & \textbf{Accuracy} & \textbf{Precision Macro} & \textbf{Recall Macro} & \textbf{F1 Macro} \\
+\hline
+Regressao Logistica & 0.97252 & 0.97587 & 0.96940 & 0.97235 \\
+SVM (LinearSVC) & 0.94992 & 0.94689 & 0.95387 & 0.95000 \\
+MLP & 0.99908 & 0.99937 & 0.99873 & 0.99905 \\
+XGBoost & 0.99998 & 0.99999 & 0.99998 & 0.99998 \\
+\hline
+\end{tabular}
+\label{tab:comparacao_principal}
+\caption*{Fonte: elaborada pelo autor com base em \texttt{classification\_report.txt} dos experimentos finais.}
+\end{table}
+
+Os resultados evidenciam superioridade de XGBoost no cenario avaliado, com desempenho quase perfeito nas metricas globais. O MLP apresentou resultado muito proximo e tambem altamente competitivo. Regressao Logistica manteve desempenho forte para um modelo linear, enquanto o SVM ficou abaixo dos demais nas metricas globais.
+
+\section{Analise por Classe}
+
+Além das metricas agregadas, a avaliacao por classe mostra que \texttt{GEAR} e \texttt{RPM} foram classes com separacao quase perfeita na maior parte dos modelos. Em contrapartida, \texttt{Fuzzy} foi a classe mais desafiadora, concentrando as menores taxas de recall entre os quatro algoritmos.
+
+No caso da Regressao Logistica, o recall de Fuzzy foi 0.89292. No SVM, esse valor foi 0.88677, representando a pior taxa de recall entre os modelos. Para o MLP, o recall de Fuzzy subiu para 0.99368, e no XGBoost atingiu 0.99990.
+
+Esse comportamento reforca que a dificuldade de classificacao nao esta distribuida de forma uniforme entre classes. Assim, a discussao de desempenho por classe e indispensavel para uma conclusao robusta sobre IDS multiclasse em CAN.
+
+\section{Discussao dos Resultados}
+
+Os resultados permitem destacar tres pontos principais.
+
+Primeiro, ha um ganho expressivo ao migrar de modelos lineares para modelos nao lineares e de maior capacidade representacional, como MLP e XGBoost.
+
+Segundo, mesmo quando a acuracia global e elevada, a avaliacao por classe continua necessaria para revelar classes mais sensiveis, como Fuzzy.
+
+Terceiro, no recorte experimental adotado, XGBoost apresentou o melhor compromisso global, seguido de perto por MLP, tornando-se a referencia principal para recomendacao no capitulo de conclusoes.
+
+\section{Sintese do Capitulo}
+
+Com base na comparacao final, o ranking global de desempenho no cenario estudado foi:
+
+\begin{enumerate}
+    \item XGBoost;
+    \item MLP;
+    \item Regressao Logistica;
+    \item SVM.
+\end{enumerate}
+
+Essa sintese responde ao objetivo comparativo do trabalho e fundamenta a recomendacao final do modelo mais adequado para IDS em rede CAN no contexto deste experimento.
+

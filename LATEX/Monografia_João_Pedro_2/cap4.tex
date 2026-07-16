@@ -1,0 +1,101 @@
+\chapter{Metodologia}
+
+Este capitulo descreve o pipeline experimental adotado para comparar modelos de aprendizado de maquina aplicados a deteccao de intrusoes em rede CAN no contexto IoVT. A metodologia foi definida para garantir reproducibilidade e consistencia entre os quatro modelos avaliados.
+
+\section{Base de Dados e Recorte Experimental}
+
+O estudo utilizou o arquivo consolidado e alinhado \texttt{carhacking\_ciciov\_benign\_dos\_aligned.csv}, gerado a partir da integracao dos dados de Car-Hacking e CICIoV. O recorte final considera cinco classes: \texttt{BENIGN}, \texttt{DoS}, \texttt{Fuzzy}, \texttt{GEAR} e \texttt{RPM}.
+
+Como parte do pre-processamento final, foram removidas 200665 amostras da fonte CARDt com \texttt{DLC < 8}, buscando padronizar o formato das mensagens utilizadas pelos classificadores. A modelagem final utilizou 9 atributos por amostra, conforme registrado nos arquivos \texttt{run\_summary.json} de cada experimento.
+
+\section{Pipeline de Processamento}
+
+O fluxo adotado pode ser resumido nas seguintes etapas:
+
+\begin{enumerate}
+  \item Carregamento do dataset final alinhado;
+  \item Aplicacao do filtro de qualidade (remocao de \texttt{DLC < 8});
+  \item Definicao das classes alvo (BENIGN, DoS, Fuzzy, GEAR, RPM);
+  \item Separacao em conjuntos de treino e teste;
+  \item Treinamento dos modelos supervisionados;
+  \item Avaliacao por \texttt{classification\_report} e acuracia final;
+  \item Exportacao dos artefatos em \texttt{results/metrics/*\_final\_clean}.
+\end{enumerate}
+
+\section{Modelos Avaliados}
+
+Foram avaliados os seguintes modelos:
+
+\begin{itemize}
+  \item Regressao Logistica;
+  \item SVM (LinearSVC);
+  \item MLP (Multilayer Perceptron);
+  \item XGBoost (XGBClassifier).
+\end{itemize}
+
+Cada modelo possui diretorio proprio de resultados contendo \texttt{run\_summary.json}, \texttt{classification\_report.txt}, \texttt{classification\_report.csv}, matriz de confusao e curvas auxiliares de treinamento.
+
+\section{Configuracao de Treino e Teste}
+
+De acordo com os artefatos finais, as dimensoes de treino e teste foram as seguintes:
+
+\begin{table}[H]
+\centering
+\caption{Configuracao dos conjuntos de treino e teste por modelo}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Modelo} & \textbf{Treino} & \textbf{Teste} \\
+\hline
+Regressao Logistica & 200000 x 9 & 80000 x 9 \\
+SVM (LinearSVC) & 150000 x 9 & 60000 x 9 \\
+MLP & 2724943 x 9 & 681236 x 9 \\
+XGBoost & 2724943 x 9 & 681236 x 9 \\
+\hline
+\end{tabular}
+\label{tab:split_modelos}
+\caption*{Fonte: elaborada pelo autor com base em \texttt{run\_summary.json}.}
+\end{table}
+
+As diferencas de tamanho entre os conjuntos por modelo decorrem da estrategia de execucao registrada nos scripts finais de treinamento.
+
+\section{Metricas de Avaliacao}
+
+A comparacao principal entre modelos foi conduzida com as seguintes metricas:
+
+\begin{itemize}
+  \item \textbf{Accuracy} no conjunto de teste;
+  \item \textbf{Precision macro};
+  \item \textbf{Recall macro};
+  \item \textbf{F1 macro};
+  \item \textbf{Metricas por classe} (precision, recall e F1 para BENIGN, DoS, Fuzzy, GEAR e RPM).
+\end{itemize}
+
+As metricas foram extraidas de \texttt{classification\_report.txt}. Para contexto experimental (formato dos dados e dimensoes), foi utilizado \texttt{run\_summary.json}.
+
+\section{Reprodutibilidade e Fontes Canonicas}
+
+Para evitar divergencia de resultados no texto final, este trabalho adota como fonte canonica os diretorios:
+
+\begin{itemize}
+  \item \texttt{results/metrics/logistic\_regression\_final\_clean}
+  \item \texttt{results/metrics/svm\_final\_clean}
+  \item \texttt{results/metrics/mlp\_final\_clean}
+  \item \texttt{results/metrics/xgboost\_final\_clean}
+\end{itemize}
+
+Relatorios anteriores agregados em \texttt{results/tcc\_package/reports} sao utilizados apenas como apoio interpretativo, nao como fonte primaria dos numeros finais apresentados nos capitulos de resultados e conclusoes.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

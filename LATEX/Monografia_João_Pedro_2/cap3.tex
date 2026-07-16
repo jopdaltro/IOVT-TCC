@@ -1,0 +1,53 @@
+\chapter{\textit{Trabalhos Relacionados}}
+
+Esta secao apresenta o panorama de pesquisas em IDS com aprendizado de maquina, com enfase em tres eixos: (i) deteccao em redes IoT e industriais, (ii) abordagens para dados desbalanceados e selecao de atributos, e (iii) aplicacoes em contexto automotivo e CAN.
+
+\section{IDS com Aprendizado de Maquina}
+
+Diversos estudos mostram que classificadores supervisionados e modelos de ensemble sao competitivos para deteccao de intrusoes em cenarios multiclasse. Em geral, os resultados melhoram quando o pipeline combina limpeza de dados, selecao de atributos e ajuste de hiperparametros.
+
+Trabalhos com Random Forest, Gradient Boosting e arquiteturas profundas reportam desempenho elevado em datasets publicos, especialmente quando o problema e formulado com classes bem definidas e protocolos de avaliacao claros. Por outro lado, muitos estudos utilizam configuracoes diferentes de split, balanceamento e preprocessamento, o que dificulta comparacao direta entre artigos.
+
+\section{Pre-processamento e Selecao de Atributos}
+
+A literatura destaca que o pre-processamento impacta diretamente as metricas finais. Tecnicas como remocao de inconsistencias, normalizacao, tratamento de classes minoritarias e selecao de variaveis reduzem ruido e aumentam estabilidade dos modelos.
+
+Abordagens com RFE, filtros baseados em correlacao e estrategias de balanceamento (incluindo over-sampling e under-sampling) sao recorrentes. Entretanto, parte dos estudos nao detalha com precisao a ordem de aplicacao dessas tecnicas, ponto critico para reprodutibilidade e para evitar vazamento de informacao entre treino e teste.
+
+\section{Contexto CAN e IoVT}
+
+No ambiente veicular, a deteccao de intrusoes em barramento CAN possui caracteristicas proprias: mensagens curtas, alta frequencia de transmissao e forte dependencia do contexto operacional do veiculo. Nesses cenarios, o desafio nao e apenas obter acuracia alta, mas manter separacao confiavel entre classes de ataque com comportamento semelhante.
+
+Os artigos auxiliares utilizados neste trabalho reforcam que classes relacionadas a perturbacoes no payload, como Fuzzy/spoofing, tendem a exigir modelos com maior capacidade de representacao. Essa observacao esta alinhada ao comportamento encontrado nos resultados experimentais desta monografia.
+
+\section{Lacunas Identificadas}
+
+Apesar do volume de pesquisas, persistem lacunas relevantes:
+
+\begin{itemize}
+	\item falta de padronizacao na comparacao de modelos, dificultando reuso dos resultados;
+	\item diferencas de protocolo experimental que tornam metricas de estudos distintos pouco comparaveis;
+	\item baixa rastreabilidade de artefatos finais em parte da literatura, limitando reproducao exata.
+\end{itemize}
+
+\section{Posicionamento deste Trabalho}
+
+Este trabalho se posiciona nessas lacunas ao adotar:
+
+\begin{itemize}
+	\item comparacao direta entre quatro modelos (Regressao Logistica, SVM, MLP e XGBoost);
+	\item fonte canonica unica de resultados finais (diretorios \texttt{*\_final\_clean});
+	\item avaliacao por metricas globais e por classe no mesmo recorte de dados.
+\end{itemize}
+
+Com essa estrategia, busca-se garantir consistencia metodologica e clareza na interpretacao dos resultados apresentados no capitulo seguinte.
+
+
+
+
+
+
+
+
+
+

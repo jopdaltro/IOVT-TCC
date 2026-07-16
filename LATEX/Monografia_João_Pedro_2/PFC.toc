@@ -1,0 +1,68 @@
+\changetocdepth {4}
+\babel@toc {brazil}{}\relax 
+\babel@toc {brazil}{}\relax 
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {1}\MakeTextUppercase []{Introdução}}{21}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Objetivo}{23}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Objetivo Geral}{23}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}Objetivos Específicos}{23}{subsection.1.1.2}%
+\contentsline {section}{\numberline {1.2}Organização do Trabalho}{24}{section.1.2}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {2}\MakeTextUppercase []{Fundamentacao Teorica}}{25}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Rede CAN no Contexto Veicular}{25}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Ataques Considerados}{25}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}DoS}{25}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Fuzzy}{25}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Spoofing de Sinais (GEAR e RPM)}{25}{subsection.2.2.3}%
+\contentsline {section}{\numberline {2.3}IDS Baseado em Aprendizado Supervisionado}{26}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Metricas de Avaliacao}{26}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Acuracia}{26}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Precisao}{26}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}Recall}{26}{subsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.4.4}F1-Score}{27}{subsection.2.4.4}%
+\contentsline {subsection}{\numberline {2.4.5}Media Macro}{27}{subsection.2.4.5}%
+\contentsline {section}{\numberline {2.5}Sintese do Capitulo}{27}{section.2.5}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {3}\MakeTextUppercase []{\textit {Trabalhos Relacionados}}}{29}{chapter.3}%
+\contentsline {section}{\numberline {3.1}IDS com Aprendizado de Maquina}{29}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Pre-processamento e Selecao de Atributos}{29}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Contexto CAN e IoVT}{29}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Lacunas Identificadas}{30}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Posicionamento deste Trabalho}{30}{section.3.5}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {4}\MakeTextUppercase []{Metodologia}}{31}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Base de Dados e Recorte Experimental}{31}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Pipeline de Processamento}{31}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Modelos Avaliados}{31}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Configuracao de Treino e Teste}{32}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Metricas de Avaliacao}{32}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Reprodutibilidade e Fontes Canonicas}{33}{section.4.6}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {5}\MakeTextUppercase []{Resultados e Discussões}}{35}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Comparacao Principal entre Modelos}{35}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Analise por Classe}{35}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Discussao dos Resultados}{36}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Sintese do Capitulo}{36}{section.5.4}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {6}\MakeTextUppercase []{Considerações Finais}}{37}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Resposta a Pergunta de Pesquisa}{37}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Principais Achados}{37}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Limitacoes}{37}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Trabalhos Futuros}{38}{section.6.4}%
+\vspace {\cftbeforechapterskip }
+\vspace {\cftbeforechapterskip }
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\contentsline {chapter}{\MakeTextUppercase []{Refer\^encias}}{39}{section*.21}%
+\renewcommand *{\cftappendixname }{AP\^ENDICE \space }
+\setlength {\cftpartindent }{\cftlastnumwidth } \setlength {\cftpartnumwidth }{2em}
+\cftinsert {A}
+\contentsline {part}{\uppercase {Ap\^endices}}{41}{section*.22}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\cftinsert {A}
+\contentsline {appendix}{\chapternumberline {A}\MakeTextUppercase []{Repositório no GitHub}}{43}{appendix.A}%

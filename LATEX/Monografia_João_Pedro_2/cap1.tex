@@ -1,0 +1,115 @@
+\chapter{Introdução}
+
+A indústria automotiva atravessa uma das maiores transformações de sua história com a incorporação de tecnologias digitais, sistemas embarcados e recursos avançados de conectividade. Veículos modernos deixaram de ser compostos exclusivamente por componentes mecânicos e passaram a integrar dezenas de unidades eletrônicas de controle (Electronic Control Units - ECUs), sensores, atuadores e módulos de comunicação responsáveis por funções que vão desde o controle do motor até sistemas avançados de assistência ao condutor. Essa evolução possibilitou o desenvolvimento de veículos mais seguros, eficientes e inteligentes, estabelecendo as bases para o conceito da Internet of Vehicles (IoVT), no qual veículos trocam informações entre si, com infraestruturas inteligentes, dispositivos móveis e serviços em nuvem.
+
+A Internet of Vehicles representa uma evolução da Internet das Coisas (IoT) aplicada ao setor automotivo. Nesse paradigma, veículos tornam-se elementos ativos de uma rede altamente conectada, compartilhando continuamente informações relacionadas ao tráfego, condições da via, localização, diagnósticos do veículo e diversos outros serviços inteligentes. Essa comunicação possibilita aplicações como direção autônoma, manutenção preditiva, gerenciamento inteligente de frotas, sistemas cooperativos de transporte e monitoramento remoto. Entretanto, ao mesmo tempo em que amplia as funcionalidades disponíveis, essa conectividade aumenta significativamente a superfície de ataque dos veículos modernos, tornando a segurança cibernética um dos principais desafios da indústria automotiva.
+
+Grande parte da comunicação interna entre os componentes eletrônicos do veículo ocorre por meio do barramento Controller Area Network (CAN), protocolo desenvolvido para permitir a troca rápida e confiável de mensagens entre as ECUs. O protocolo CAN tornou-se o padrão predominante na indústria automotiva devido à sua simplicidade, baixo custo, robustez e capacidade de operar em ambientes sujeitos a interferências eletromagnéticas. Por meio desse barramento, informações críticas relacionadas ao motor, sistema de freios, transmissão, direção, airbag, painel de instrumentos e diversos outros módulos são transmitidas continuamente durante toda a operação do veículo.
+
+Embora eficiente para comunicação em tempo real, o protocolo CAN foi desenvolvido em uma época em que veículos operavam de forma isolada, sem a necessidade de comunicação com redes externas. Dessa forma, mecanismos de segurança, como autenticação de mensagens, criptografia, controle de acesso e verificação da identidade dos dispositivos, não foram incorporados ao protocolo original. Como consequência, qualquer ECU conectada ao barramento pode transmitir mensagens que serão aceitas pelos demais módulos, desde que utilizem um identificador válido. Essa característica torna a rede CAN vulnerável a diferentes tipos de ataques capazes de comprometer tanto a segurança cibernética quanto a segurança funcional do veículo.
+
+Nos últimos anos, diversos estudos demonstraram que atacantes podem explorar essas vulnerabilidades para realizar diferentes formas de ataque ao barramento CAN. Entre os ataques mais comuns destacam-se os ataques de negação de serviço (Denial of Service - DoS), que saturam o barramento com mensagens de alta prioridade e impedem a comunicação legítima entre as ECUs; ataques de spoofing, nos quais mensagens falsas são injetadas simulando módulos legítimos; ataques Fuzzy, caracterizados pela inserção de quadros CAN com identificadores aleatórios; e ataques específicos de falsificação de parâmetros críticos, como velocidade do motor (RPM) e posição da transmissão (Gear). A execução bem-sucedida desses ataques pode provocar desde falhas operacionais até alterações no comportamento do veículo, comprometendo sua confiabilidade e colocando em risco a segurança dos ocupantes.
+
+A crescente sofisticação dos ataques cibernéticos evidencia que mecanismos tradicionais de proteção, como firewalls e autenticação em gateways, não são suficientes para garantir a segurança de sistemas automotivos modernos. Em muitos casos, o atacante pode obter acesso físico à rede CAN por meio da porta OBD-II ou explorar interfaces externas, como Bluetooth, Wi-Fi, sistemas multimídia e módulos telemáticos, permitindo a injeção de mensagens maliciosas diretamente no barramento. Nesse cenário, torna-se fundamental desenvolver mecanismos capazes de identificar rapidamente comportamentos anômalos durante a comunicação entre os módulos eletrônicos do veículo.
+
+Entre as soluções propostas para enfrentar esse desafio, os Sistemas de Detecção de Intrusão (Intrusion Detection Systems - IDS) destacam-se como uma das principais abordagens de segurança em redes automotivas. Diferentemente dos mecanismos preventivos, os IDS têm como objetivo monitorar continuamente o tráfego da rede e identificar atividades suspeitas ou padrões incompatíveis com o comportamento normal do sistema. Uma vez detectada uma possível intrusão, o sistema pode emitir alertas ou acionar mecanismos de resposta capazes de minimizar os impactos do ataque.
+
+Nos últimos anos, técnicas de aprendizado de máquina têm sido amplamente investigadas para aplicação em sistemas de detecção de intrusão. Diferentemente das abordagens baseadas exclusivamente em assinaturas, modelos supervisionados são capazes de aprender padrões de comunicação presentes nos dados e identificar diferentes categorias de ataques mesmo em cenários complexos de classificação. Além disso, esses modelos apresentam potencial para detectar comportamentos anômalos com elevada precisão, tornando-se uma alternativa promissora para aplicações em segurança cibernética automotiva.
+
+Entretanto, a construção de modelos confiáveis depende diretamente da qualidade dos dados utilizados durante o treinamento. Bases de dados provenientes de diferentes fontes frequentemente apresentam inconsistências, formatos distintos, redundâncias e distribuições desbalanceadas entre as classes, fatores que podem comprometer significativamente o desempenho dos algoritmos de aprendizado de máquina. Dessa forma, etapas de pré-processamento, alinhamento das características, tratamento dos dados e balanceamento das classes tornam-se fundamentais para garantir uma avaliação justa e representativa dos modelos desenvolvidos.
+
+Neste trabalho é investigada a aplicação de técnicas supervisionadas de aprendizado de máquina para a detecção de intrusões em redes CAN automotivas. Para isso, foi construído um conjunto de dados alinhado e pré-processado contendo as classes BENIGN, DoS, Fuzzy, GEAR e RPM, obtido a partir da integração de bases públicas amplamente utilizadas na literatura. Sobre esse conjunto de dados são avaliados quatro modelos de classificação: Regressão Logística, Support Vector Machine (SVM), Multilayer Perceptron (MLP) e eXtreme Gradient Boosting (XGBoost). O desempenho dos modelos é analisado por meio de métricas clássicas de classificação, incluindo acurácia, precisão, revocação, F1-score e curvas ROC, permitindo comparar sua capacidade de identificar corretamente diferentes categorias de ataques em um cenário de classificação multiclasse.
+
+Os resultados obtidos contribuem para a compreensão da aplicabilidade de técnicas de aprendizado de máquina na segurança cibernética automotiva, fornecendo uma análise comparativa entre diferentes algoritmos supervisionados e evidenciando suas vantagens, limitações e potencial de utilização em sistemas de detecção de intrusão para redes CAN.
+
+
+\section{Objetivo}
+
+\subsection{Objetivo Geral}
+
+O objetivo geral deste trabalho é desenvolver e avaliar um sistema de detecção de intrusões para redes CAN de sistemas veiculares, utilizando técnicas supervisionadas de aprendizado de máquina, a fim de comparar o desempenho de diferentes modelos na identificação de tráfego legítimo e de ataques cibernéticos em um cenário de classificação multiclasse da Internet of Vehicles (IoVT).
+
+\subsection{Objetivos Específicos}
+
+Para alcançar o objetivo geral proposto, foram definidos os seguintes objetivos específicos:
+
+\begin{itemize}
+
+\item Realizar uma revisão bibliográfica sobre segurança cibernética automotiva, Internet of Vehicles (IoVT), redes CAN e Sistemas de Detecção de Intrusão (IDS);
+
+\item Investigar os principais ataques direcionados às redes CAN e seus impactos sobre a segurança e o funcionamento dos sistemas veiculares;
+
+\item Construir um conjunto de dados unificado a partir de bases públicas, realizando o alinhamento das características, tratamento dos dados e pré-processamento necessário para o treinamento dos modelos;
+
+\item Avaliar o impacto das etapas de pré-processamento na qualidade do conjunto de dados utilizado para o desenvolvimento dos modelos;
+
+\item Implementar e treinar diferentes algoritmos supervisionados de aprendizado de máquina para a detecção e classificação de intrusões em redes CAN;
+
+\item Comparar o desempenho dos modelos por meio de métricas de classificação, incluindo acurácia, precisão, revocação e F1-score;
+
+\item Analisar o desempenho individual de cada classe de ataque, identificando as categorias de maior dificuldade de classificação;
+
+\item Identificar o modelo que apresenta o melhor desempenho global para aplicação em sistemas de detecção de intrusão em redes CAN.
+
+\end{itemize}
+
+\section{Organização do Trabalho}
+
+Este trabalho está organizado em seis capítulos. O Capítulo 1 apresenta a introdução, abordando a contextualização do problema, a motivação, os objetivos da pesquisa e a organização do trabalho. No Capítulo 2 é apresentada a fundamentação teórica, contemplando os principais conceitos relacionados à Internet of Vehicles (IoVT), às redes CAN, à segurança cibernética automotiva, aos sistemas de detecção de intrusão e às técnicas de aprendizado de máquina utilizadas neste estudo. O Capítulo 3 apresenta os trabalhos relacionados, discutindo pesquisas recentes sobre detecção de intrusões em redes CAN e evidenciando as principais contribuições da literatura.
+
+No Capítulo 4 é descrita a metodologia empregada no desenvolvimento do trabalho, incluindo a caracterização dos conjuntos de dados utilizados, as etapas de pré-processamento, a construção da base final, os modelos de aprendizado de máquina avaliados, as métricas de desempenho adotadas e o ambiente experimental. O Capítulo 5 apresenta os resultados obtidos e realiza uma análise comparativa entre os modelos, considerando tanto as métricas globais quanto o desempenho individual de cada classe de ataque. Por fim, o Capítulo 6 apresenta as conclusões do trabalho, destacando as principais contribuições da pesquisa, suas limitações e sugestões para trabalhos futuros.
+
+
+
+% Introduzir Figura
+%\begin{figure}
+%	   \centering
+%	   		\includegraphics[scale=0.35]{figs/MPCbase.PNG} 
+%	   \caption{Algoritmo MPC}
+%	   \label{label para referencia cruzada Figura}
+%\end{figure}
+
+
+% Lista de Item
+
+%\begin{itemize}
+%	\item item 1
+%	\item item 2
+%	\item item 3
+%\end{itemize}
+
+% Equação
+%\begin{equation}
+%	\label{label para referencia cruzada %equacoes} 
+%	y(t)=\sum_{i=1}^{\infty}h_i\Delta u(t-i)
+%\end{equation}
+
+% Equação em linha 
+%$\hat{y}(t+k\mid t)= \sum^\infty_{i=1} g_i %\Delta u(t+k-i\mid t)$
+
+% Citação -  Criei o arquivo de bibliografia usando o jabref
+
+%\cite{Camacho2007} 
+
+% Referencia Cruzada de Figura
+%\ref{label para referencia cruzada Figura}
+
+% Referencia Cruzada de Equação
+%\ref{label para referencia cruzada equacoes}
+
+
+% Tabelas
+
+%\begin{table}[h]
+%\begin{center}
+%     \caption{Índices 1 para casos factíveis}
+%     \begin{tabular}{| l | l | l | l |}
+%     \hline Índice & LP Petro & LP 2 & %Diferença\\ 
+%     \hline $SES_y$& 60.5406 & 60.5492 & %-0.0087\\
+%     \hline $SES_u$& 1166.1464 & 1166.1464 & 2.36*$10^{-9}$ \\
+%     \hline
+ 
+%    \end{tabular}
+%\label{table:indices1}
+%\end{center}
+%\end{table}
