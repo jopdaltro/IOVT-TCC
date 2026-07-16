@@ -4,44 +4,42 @@
       "mode": "bytes_only"
     },
     "best_cv_accuracy": NaN,
-    "test_accuracy": 0.6058702901680617,
-    "n_test_samples": 256989,
+    "test_accuracy": 0.59566,
+    "n_test_samples": 250000,
     "classes": [
       "BENIGN",
       "DoS",
       "Fuzzy",
       "GEAR",
-      "RPM",
-      "SPEED"
+      "RPM"
     ],
-    "precision_macro": 0.6581920455715555,
-    "recall_macro": 0.6623766666666667,
-    "f1_macro": 0.6528506613315125,
-    "precision_weighted": 0.6021741511168187,
-    "recall_weighted": 0.6058702901680617,
-    "f1_weighted": 0.5953465031792307,
-    "fpr_macro_ovr": 0.0815489372221068,
+    "precision_macro": 0.5905255179692949,
+    "recall_macro": 0.5956600000000001,
+    "f1_macro": 0.5855162408226111,
+    "precision_weighted": 0.5905255179692949,
+    "recall_weighted": 0.59566,
+    "f1_weighted": 0.585516240822611,
+    "fpr_macro_ovr": 0.10108500000000001,
     "fpr_per_class_ovr": {
-      "BENIGN": 0.07104725371879665,
-      "DoS": 0.11964887022981897,
-      "Fuzzy": 0.08571469981496602,
-      "GEAR": 0.15843837112117068,
-      "RPM": 0.054244428447888536,
-      "SPEED": 0.0002
+      "BENIGN": 0.072805,
+      "DoS": 0.118365,
+      "Fuzzy": 0.0908,
+      "GEAR": 0.16416,
+      "RPM": 0.059295
     },
     "attack_detection": {
-      "attack_precision": 0.9980431848852902,
-      "attack_recall": 0.9289527462812034,
-      "attack_f1": 0.9622593826082388,
-      "attack_fpr": 0.00754,
-      "attack_fnr": 0.07104725371879665
+      "attack_precision": 0.9977992768283759,
+      "attack_recall": 0.927195,
+      "attack_f1": 0.9612023387447907,
+      "attack_fpr": 0.00818,
+      "attack_fnr": 0.072805
     },
     "efficiency": {
-      "training_time_seconds": 187.8176180999726,
-      "inference_time_seconds": 2.4796113000484183,
-      "inference_time_ms_per_sample": 0.009648705975930559,
-      "inference_throughput_samples_per_second": 103640.84080233941,
-      "model_size_mb": 15.44193172454834
+      "training_time_seconds": 148.27081760001602,
+      "inference_time_seconds": 2.2377114999690093,
+      "inference_time_ms_per_sample": 0.008950845999876037,
+      "inference_throughput_samples_per_second": 111721.28310707718,
+      "model_size_mb": 14.923548698425293
     }
   },
   "two_stage_bytes_only": {
@@ -49,44 +47,42 @@
       "mode": "bytes_only_two_stage"
     },
     "best_cv_accuracy": NaN,
-    "test_accuracy": 0.6061232192817592,
-    "n_test_samples": 256989,
+    "test_accuracy": 0.59578,
+    "n_test_samples": 250000,
     "classes": [
       "BENIGN",
       "DoS",
       "Fuzzy",
       "GEAR",
-      "RPM",
-      "SPEED"
+      "RPM"
     ],
-    "precision_macro": 0.6578918533221415,
-    "recall_macro": 0.6625933333333334,
-    "f1_macro": 0.6531601409673674,
-    "precision_weighted": 0.6018237171495119,
-    "recall_weighted": 0.6061232192817592,
-    "f1_weighted": 0.5957077789177117,
-    "fpr_macro_ovr": 0.08149659949723576,
+    "precision_macro": 0.5910834053397023,
+    "recall_macro": 0.59578,
+    "f1_macro": 0.5858373554553766,
+    "precision_weighted": 0.5910834053397023,
+    "recall_weighted": 0.59578,
+    "f1_weighted": 0.5858373554553765,
+    "fpr_macro_ovr": 0.101055,
     "fpr_per_class_ovr": {
-      "BENIGN": 0.07104725371879665,
-      "DoS": 0.1200595200711149,
-      "Fuzzy": 0.08741527327539145,
-      "GEAR": 0.15546719874002965,
-      "RPM": 0.054790351178081925,
-      "SPEED": 0.0002
+      "BENIGN": 0.072805,
+      "DoS": 0.120455,
+      "Fuzzy": 0.0892,
+      "GEAR": 0.16391,
+      "RPM": 0.058905
     },
     "attack_detection": {
-      "attack_precision": 0.9980431848852902,
-      "attack_recall": 0.9289527462812034,
-      "attack_f1": 0.9622593826082388,
-      "attack_fpr": 0.00754,
-      "attack_fnr": 0.07104725371879665
+      "attack_precision": 0.9977992768283759,
+      "attack_recall": 0.927195,
+      "attack_f1": 0.9612023387447907,
+      "attack_fpr": 0.00818,
+      "attack_fnr": 0.072805
     },
     "efficiency": {
-      "training_time_seconds": 139.68555429996923,
-      "inference_time_seconds": 21.576286799972877,
-      "inference_time_ms_per_sample": 0.0839580168799944,
-      "inference_throughput_samples_per_second": 11910.714868710544,
-      "model_size_mb": 13.33676528930664
+      "training_time_seconds": 100.23526859999401,
+      "inference_time_seconds": 21.285108699987177,
+      "inference_time_ms_per_sample": 0.0851404347999487,
+      "inference_throughput_samples_per_second": 11745.300600703562,
+      "model_size_mb": 12.738601684570312
     }
   }
 }

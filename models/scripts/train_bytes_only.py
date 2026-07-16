@@ -27,7 +27,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from evaluation_utils import write_metrics_bundle
 
 ROOT       = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-DATA_PATH  = os.path.join(ROOT, "data", "processed", "all_datasets_aligned_balanced.csv")
+DATA_PATH  = os.path.join(ROOT, "data", "processed", "bytes_only_aligned_balanced.csv")
 RESULTS_DIR = os.path.join(ROOT, "results")
 
 BYTE_COLS = ["val0", "val1", "val2", "val3", "val4", "val5", "val6", "val7"]
